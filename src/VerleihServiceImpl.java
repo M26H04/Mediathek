@@ -299,7 +299,7 @@ class VerleihServiceImpl extends AbstractObservableService
      * 
      * @param medien Eine Liste von Medien.
      * @return true wenn die Medien existieren, sonst false.
-     * 
+     * gfgfgkkjk
      * @require medien != null
      * @require !medien.isEmpty()
      */
