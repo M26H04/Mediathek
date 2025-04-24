@@ -47,13 +47,34 @@ class VerleihServiceImpl extends AbstractObservableService
         _kundenstamm = kundenstamm;
         _medienbestand = medienbestand;
     }
-
+    
+    /**
+     * Verleiht Medien an einen Kunden. Dabei wird für jedes Medium eine neue
+     * Verleihkarte angelegt.
+     * 
+     * @param kunde Ein Kunde, an den ein Medium verliehen werden soll
+     * @param medien Die Medien, die verliehen werden sollen
+     * @param ausleihDatum Der erste Ausleihtag
+     * 
+     * @require kundeImBestand(kunde)
+     * @require sindAlleNichtVerliehen(medien)
+     * @require ausleihDatum != null
+     * 
+     * @ensure sindAlleVerliehen(medien)
+     */
     @Override
     public void verleiheAn(Kunde kunde, List<Medium> medien, Datum ausleihDatum)
     {
+        assert ausleihDatum != null : "Vorbedingung verletzt: ausleihDatum != null";
+        assert kundeImBestand(kunde) : "Vorbedingung verletzt: kundeImBestand(kunde)";
+        assert sindAlleNichtVerliehen(medien) : "Vorbedingung verletzt: sindAlleNichtVerliehen";
+        
+
+
         for (Medium medium : medien)
         {
             Verleihkarte karte = new Verleihkarte(kunde, medium, ausleihDatum);
+               
 
         }
 
