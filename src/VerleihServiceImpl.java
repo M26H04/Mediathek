@@ -65,7 +65,7 @@ class VerleihServiceImpl extends AbstractObservableService
     @Override
     public void verleiheAn(Kunde kunde, List<Medium> medien, Datum ausleihDatum)
     {
-        assert ausleihDatum != null : "Vorbedingung verletzt: ausleihDatum != null";
+        
         assert kundeImBestand(kunde) : "Vorbedingung verletzt: kundeImBestand(kunde)";
         assert sindAlleNichtVerliehen(medien) : "Vorbedingung verletzt: sindAlleNichtVerliehen";
         
