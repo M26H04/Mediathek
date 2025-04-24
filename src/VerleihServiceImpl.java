@@ -348,9 +348,22 @@ class VerleihServiceImpl extends AbstractObservableService
         return result;
     }
 
+    /**
+     * Gibt die Verleihkarte für das angegebene Medium zurück, oder null wenn
+     * das Medium nicht verliehen ist.
+     * 
+     * @param medium Ein Medium.
+     * @return Die Verleihkarte für das angegebene Medium.
+     * 
+     * @require istVerliehen(medium)
+     * 
+     * @ensure (result != null)
+     */
     @Override
     public Verleihkarte getVerleihkarteFuer(Medium medium)
     {
+        assert istVerliehen(null):"Vorbedingung verletzt: istVerliehen(null):";
+
         return _verleihkarten.get(medium);
     }
 
