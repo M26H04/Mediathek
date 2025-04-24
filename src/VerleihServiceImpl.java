@@ -276,15 +276,38 @@ class VerleihServiceImpl extends AbstractObservableService
         return _kundenstamm.enthaeltKunden(kunde);
     }
 
+    /**
+     * Prüft ob das angebene Medium existiert. Ein Medium existiert, wenn es im
+     * Medienbestand enthalten ist.
+     * 
+     * @param medium Ein Medium.
+     * @return true wenn das Medium existiert, sonst false.
+     * 
+     * @require medium != null
+     */
     @Override
     public boolean mediumImBestand(Medium medium)
     {
+        assert medium != null : "Vorbedingung verletzt: medium != null";
+
         return _medienbestand.enthaeltMedium(medium);
     }
 
+    /**
+     * Prüft ob die angebenen Medien existierien. Ein Medium existiert, wenn es
+     * im Medienbestand enthalten ist.
+     * 
+     * @param medien Eine Liste von Medien.
+     * @return true wenn die Medien existieren, sonst false.
+     * 
+     * @require medien != null
+     * @require !medien.isEmpty()
+     */
     @Override
     public boolean medienImBestand(List<Medium> medien)
     {
+        assert medien != null : "Vorbedingung verletzt: medien != null";
+
         boolean result = true;
         for (Medium medium : medien)
         {
@@ -297,9 +320,22 @@ class VerleihServiceImpl extends AbstractObservableService
         return result;
     }
 
+    /**
+     * Gibt alle Verleihkarten für den angegebenen Kunden zurück.
+     * 
+     * @param kunde Ein Kunde.
+     * @return Alle Verleihkarten des angebenen Kunden. Eine leere Liste, wenn
+     *         der Kunde nichts entliehen hat.
+     * 
+     * @require kundeImBestand(kunde)
+     * 
+     * @ensure result != null
+     */
     @Override
     public List<Verleihkarte> getVerleihkartenFuer(Kunde kunde)
     {
+        assert kundeImBestand(kunde): "Vorbedingung verletzt: kundeImBestand(kunde)";
+
         List<Verleihkarte> result = new ArrayList<Verleihkarte>();
         for (Verleihkarte verleihkarte : _verleihkarten.values())
         {
