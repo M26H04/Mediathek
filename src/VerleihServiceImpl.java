@@ -68,6 +68,8 @@ class VerleihServiceImpl extends AbstractObservableService
         
         assert kundeImBestand(kunde) : "Vorbedingung verletzt: kundeImBestand(kunde)";
         assert sindAlleNichtVerliehen(medien) : "Vorbedingung verletzt: sindAlleNichtVerliehen";
+        assert ausleihDatum != null : "Vorbedingung verletzt: ausleihDatum != null";
+
         
 
 
@@ -81,22 +83,69 @@ class VerleihServiceImpl extends AbstractObservableService
         informiereUeberAenderung();
     }
 
+    /**
+     * Prüft ob die ausgewählten Medium für den Kunde ausleihbar sind
+     * 
+     * @param kunde Der Kunde für den geprüft werden soll
+     * @param medien Die medien
+     * 
+     * 
+     * @return true, wenn das entleihen für diesen Kunden möglich ist, sonst
+     *         false
+     * 
+     * @require kundeImBestand(kunde)
+     * @require medienImBestand(medien)
+     * 
+     */
     @Override
     public boolean istVerleihenMoeglich(Kunde kunde, List<Medium> medien)
     {
+        assert kundeImBestand(kunde) : "Vorbedingung verletzt: kundeImBestand(kunde)";
+        assert medienImBestand(medien):"Vorbedingung verletzt: medienImBestand(medien)";
+
+
         return sindAlleNichtVerliehen(medien);
     }
 
+    /**
+     * Liefert den Entleiher des angegebenen Mediums.
+     * 
+     * @param medium Das Medium.
+     * 
+     * @return Den Entleiher des Mediums.
+     * 
+     * @require istVerliehen(medium)
+     * 
+     * @ensure result != null
+     */
     @Override
     public Kunde getEntleiherFuer(Medium medium)
     {
+        
+        assert istVerliehen(medium): "Vorbedingung verletzt: istVerliehen(medium)";
+
         Verleihkarte verleihkarte = _verleihkarten.get(medium);
         return verleihkarte.getEntleiher();
     }
 
+    /**
+     * Liefert alle Medien, die von dem gegebenen Kunden ausgeliehen sind.
+     * 
+     * @param kunde Der Kunde.
+     * @return Alle Medien, die von dem gegebenen Kunden ausgeliehen sind.
+     *         Liefert eine leere Liste, wenn der Kunde aktuell nichts
+     *         ausgeliehen hat.
+     * 
+     * @require kundeImBestand(kunde)
+     * 
+     * @ensure result != null
+     */
     @Override
     public List<Medium> getAusgelieheneMedienFuer(Kunde kunde)
     {
+        
+        assert kundeImBestand(kunde): "Vorbedingung verletzt: kundeImBestand(kunde)";
+
         List<Medium> result = new ArrayList<Medium>();
         for (Verleihkarte verleihkarte : _verleihkarten.values())
         {
@@ -115,25 +164,64 @@ class VerleihServiceImpl extends AbstractObservableService
         return new ArrayList<Verleihkarte>(_verleihkarten.values());
     }
 
+    
+    /**
+     * Nimmt zuvor ausgeliehene Medien zurück. Die entsprechenden Verleihkarten
+     * werden gelöscht.
+     * 
+     * @param medien Die Medien.
+     * @param rueckgabeDatum Das Rückgabedatum.
+     * 
+     * @require sindAlleVerliehen(medien)
+     * @require rueckgabeDatum != null
+     * 
+     * @ensure sindAlleNichtVerliehen(medien)
+     */
     @Override
     public void nimmZurueck(List<Medium> medien, Datum rueckgabeDatum)
     {
+        assert sindAlleVerliehen(medien):"Vorbedingung verletzt: sindAlleVerliehen(medien)";
+        assert rueckgabeDatum != null : "Vorbedingung verletzt: rueckgabeDatum != null";
+
+
         for (Medium medium : medien)
         {
             _verleihkarten.remove(medium);
         }
         informiereUeberAenderung();
     }
-
+    
+    /**
+     * Prüft ob das angegebene Medium verliehen ist.
+     * 
+     * @param medium Ein Medium, für das geprüft werden soll ob es verliehen ist.
+     * @return true, wenn das gegebene medium verliehen ist, sonst false.
+     * 
+     * @require mediumImBestand(medium)
+     */
     @Override
     public boolean istVerliehen(Medium medium)
     {
+        assert mediumImBestand(medium): "Vorbedingung verletzt: mediumImBestand(medium)";
+
+        
         return _verleihkarten.get(medium) != null;
     }
 
+    /**
+     * Prüft ob alle angegebenen Medien nicht verliehen sind.
+     * 
+     * @param medien Eine Liste von Medien.
+     * @return true, wenn alle gegebenen Medien nicht verliehen sind, sonst
+     *         false (auch wenn die Liste leer ist).
+     * 
+     * @require medienImBestand(medien)
+     */
     @Override
     public boolean sindAlleNichtVerliehen(List<Medium> medien)
     {
+        assert medienImBestand(medien):"Vorbedingung verletzt: medienImBestand(medien)";
+
         boolean result = true;
         for (Medium medium : medien)
         {
@@ -145,9 +233,21 @@ class VerleihServiceImpl extends AbstractObservableService
         return result;
     }
 
+    /**
+     * Prüft ob alle angegebenen Medien verliehen sind.
+     * 
+     * @param medien Eine Liste von Medien.
+     * 
+     * @return true, wenn alle gegebenen Medien verliehen sind, sonst false
+     *         (auch wenn die Liste leer ist).
+     * 
+     * @require medienImBestand(medien)
+     */
     @Override
     public boolean sindAlleVerliehen(List<Medium> medien)
     {
+        assert medienImBestand(medien): "Vorbedingung verletzt: medienImBestand(medien)";
+
         boolean result = true;
         for (Medium medium : medien)
         {
@@ -159,9 +259,20 @@ class VerleihServiceImpl extends AbstractObservableService
         return result;
     }
 
+    /**
+     * Prüft ob der angebene Kunde existiert. Ein Kunde existiert, wenn er im
+     * Kundenstamm enthalten ist.
+     * 
+     * @param kunde Ein Kunde.
+     * @return true wenn der Kunde existiert, sonst false.
+     * 
+     * @require kunde != null
+     */
     @Override
     public boolean kundeImBestand(Kunde kunde)
     {
+        assert kunde != null : "Vorbedingung verletzt: kunde != null";
+
         return _kundenstamm.enthaeltKunden(kunde);
     }
 
