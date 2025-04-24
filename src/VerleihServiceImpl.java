@@ -14,7 +14,7 @@ class VerleihServiceImpl extends AbstractObservableService
         implements VerleihService
 {
     /**
-     * Diese Map speichert für jedes eingefügte Medium die dazugehörige
+     * Diese Map speichert für jedes eingefügte Medium die dazugehörigefff
      * Verleihkarte. Ein Zugriff auf die Verleihkarte ist dadurch leicht über
      * die Angabe des Mediums möglich. Beispiel: _verleihkarten.get(medium)
      */
