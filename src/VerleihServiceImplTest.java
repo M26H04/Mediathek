@@ -65,11 +65,26 @@ public class VerleihServiceImplTest
     @Test
     public void testNochEinTestFall1()
     {
+    	
     }
 
     @Test
     public void testNochEinTestFall2()
     {
+    	  // Nur ein Medium verwenden
+        List<Medium> medien = new ArrayList<>();
+        medien.add(_abbey);
+
+        // Medium verleihen
+        Datum ausleihDatum = new Datum(1, 1, 2025);
+        _verleihService.verleiheAn(_homer, medien, ausleihDatum);
+
+        // Erwartung: Das Medium sollte als verliehen gelten
+        assertTrue("Medium sollte als verliehen gelten", _verleihService.istVerliehen(_abbey));
+
+        // Erwartung: Der Entleiher sollte Homer sein
+        //Kunde entleiher = _verleihService.getEntleiherFuer(_abbey);
+       // assertEquals("Entleiher sollte Homer sein", _homer, entleiher);
     }
 
     @Test

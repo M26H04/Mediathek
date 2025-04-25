@@ -65,9 +65,9 @@ class VerleihServiceImpl extends AbstractObservableService
 	    for (Medium medium : medien)
 	    {
 	        Verleihkarte karte = new Verleihkarte(kunde, medium, ausleihDatum);
-	
+	        _verleihkarten.put(medium, karte);
 	    }
-	
+	    
 	    informiereUeberAenderung();
 	}
 
@@ -130,6 +130,8 @@ class VerleihServiceImpl extends AbstractObservableService
 	    {
 	        _verleihkarten.remove(medium);
 	    }
+	    
+	    
 	    informiereUeberAenderung();
 	}
 
@@ -180,7 +182,10 @@ class VerleihServiceImpl extends AbstractObservableService
     public boolean kundeImBestand(Kunde kunde)
     {
         // Der Kunde muss im System registriert sein.
-        assert kundeImBestand(kunde) : "Vorbedingung verletzt: Kunde nicht im Bestand";
+        //assert kundeImBestand(kunde) : "Vorbedingung verletzt: Kunde nicht im Bestand";
+    	
+    	// Das übergebene kunde darf nicht null sein.
+        assert kunde != null : "Vorbedingung verletzt: kunde ist null";
 
         return _kundenstamm.enthaeltKunden(kunde);
     }
