@@ -50,7 +50,7 @@ class VerleihServiceImpl extends AbstractObservableService
     
     /**
      * Verleiht Medien an einen Kunden. Dabei wird für jedes Medium eine neue
-     * Verleihkarte angelegt.
+     * Verleihkarte angelegt.df
      * 
      * @param kunde Ein Kunde, an den ein Medium verliehen werden soll
      * @param medien Die Medien, die verliehen werden sollen
